@@ -1,0 +1,15 @@
+---
+- hosts: web
+  become: yes
+
+  tasks:
+
+    - name: Create Project Directory
+      file:
+        path: /opt/myapp
+        state: directory
+
+    - name: Create Status File
+      copy:
+        content: "Deployment Successful"
+        dest: /opt/myapp/status.txt

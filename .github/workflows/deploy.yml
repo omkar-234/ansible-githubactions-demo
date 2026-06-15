@@ -1,0 +1,29 @@
+name: Ansible Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install ansible -y
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Run Playbook
+        run: |
+          ansible-playbook -i ansible/inventory ansible/deploy.yml
